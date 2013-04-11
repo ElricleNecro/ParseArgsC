@@ -5,12 +5,14 @@
 
 typedef enum {
 	NONE,
+	VOID,
 	DOUBLE,
 	FLOAT,
 	INT,
 	LONG,
 	CHAR,
 	SHORT,
+	BOOL,
 
 	UINT,
 	ULONG,
@@ -23,64 +25,29 @@ typedef enum {
 	IMPLEMENTED
 } Type;
 
-typedef struct {
-	char *opt, *lopt;
-	Type type;
-}Option;
-
 typedef union {
-	double T_double;
-	float T_float;
-	int T_int;
-	long T_long;
-	char T_char;
-	short T_short;
-	unsigned int T_unsignedint;
-	unsigned char T_unsignedchar;
-	unsigned short T_unsignedshort;
-	unsigned long T_unsignedlong;
-	long double T_longdouble;
-	long long T_longlong;
-	/*		double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;
-			double T_double;*/
+	bool           * T_bool;
+	void           * T_void;
+	double         * T_double;
+	float          * T_float;
+	int            * T_int;
+	long           * T_long;
+	char           * T_char;
+	short          * T_short;
+	unsigned int   * T_uint;
+	unsigned char  * T_uchar;
+	unsigned short * T_ushort;
+	unsigned long  * T_ulong;
+	long double    * T_ldouble;
+	long long      * T_llong;
 } Value;
+
+typedef struct {
+	char       * opt,  * lopt;
+	char       * help;
+	Type         type;
+	Value        val;
+}Option;
 
 typedef struct _args{
 	char *opt;
@@ -90,6 +57,6 @@ typedef struct _args{
 	struct _args *next;
 }Args;
 
-Args* Parser(const int argc, const char const * const *argv, const Option *list, const int Nopt);
+Option Option_Create(const char *opt, const char *lopt, Type type, void *def, const char *help);
 
 #endif /* end of include guard: PARSE_H */

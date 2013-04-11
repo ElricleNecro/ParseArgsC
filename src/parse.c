@@ -1,111 +1,64 @@
 #include "parse.h"
 
-char *retire(const char *src, const char *mv)
+Option Option_Create(const char *opt, const char *lopt, Type type, void *def, const char *help)
 {
-	int length = strlen(src);
-	char res[length];
+	Option new;
 
-	for(int i=0, j=0; i<length && j<length; i++)
+	new.opt  = opt;
+	new.lopt = lopt;
+	new.type = type;
+	new.help = help;
+
+	switch(type)
 	{
-		if( strcmp(src[i], mv) )
-		{
-			res[j] = src[i];
-			j++;
-		}
+		case NONE:
+		case VOID:
+			new.val.T_void    = (void*)def;
+			break;
+		case BOOL:
+			new.val.T_bool    = (bool*)def;
+			break;
+		case DOUBLE:
+			new.val.T_double  = (double*)def;
+			break;
+		case FLOAT:
+			new.val.T_float   = (float*)def;
+			break;
+		case INT:
+			new.val.T_int     = (int*)def;
+			break;
+		case LONG:
+			new.val.T_long    = (long*)def;
+			break;
+		case CHAR:
+			new.val.T_char    = (char*)def;
+			break;
+		case SHORT:
+			new.val.T_short   = (short*)def;
+			break;
+		case UINT:
+			new.val.T_uint    = (unsigned int*)def;
+			break;
+		case ULONG:
+			new.val.T_ulong   = (unsigned long*)def;
+			break;
+		case UCHAR:
+			new.val.T_uchar   = (unsigned char*)def;
+			break;
+		case USHORT:
+			new.val.T_ushort  = (unsigned short*)def;
+			break;
+		case LLONG:
+			new.val.T_llong   = (long long*)def;
+			break;
+		case LDOUBLE:
+			new.val.T_ldouble = (long double*)def;
+			break;
+		default:
+			fprintf(stderr, "%s::Unsupported Type found while creating Option (-%s, --%s)!\n", __func__, opt, lopt)
+			exit(EXIT_FAILURE);
 	}
 
-	return res;
-}
-
-Option* in(const char *arg, const Option *list, const int Nopt)
-{
-	for (int i = 0; i < Nopt; i++)
-		if (    ( list[i].opt  != NULL && !strcmp(retire(arg, "-"),  list[i].opt ) )   ||
-			( list[i].lopt != NULL && !strcmp(retire(arg, "--"), list[i].lopt) )
-		   )
-			return &list[i];
-	return NULL;
-}
-
-void add(Args *res, Args *adding)
-{
-	Args *move = NULL;
-
-	do
-	{
-		move = res->next;
-	}while(res->next != NULL);
-
-	move->next = adding;
-}
-
-Args* Parser(const int argc, const char **argv, const Option *list, const int Nopt)
-{
-	Option opt;
-	Args  *res = NULL;
-
-	for (int i = 0; i < argc; i++)
-	{
-		if( (opt = in(argv[i], list, Nopt)) )
-		{
-			Args *tmp = malloc(sizeof(Val));
-
-			tmp->opt = argv[i];
-			switch(opt.type)
-			{
-				case DOUBLE:
-					tmp.data.T_double;
-					break;
-				case FLOAT:
-					tmp.data.T_float;
-					break;
-				case INT:
-					tmp.data.T_int;
-					break;
-				case LONG:
-					tmp.data.T_long;
-					break;
-				case CHAR:
-					tmp.data.T_char;
-					break;
-				case SHORT:
-					tmp.data.T_short;
-					break;
-				case UDOUBLE:
-					tmp.data.T_unsigneddouble;
-					break;
-				case UFLOAT:
-					tmp.data.T_unsignedfloat;
-					break;
-				case UINT:
-					tmp.data.T_unsignedint;
-					break;
-				case ULONG:
-					tmp.data.T_unsignedlong;
-					break;
-				case UCHAR:
-					tmp.data.T_unsignedchar;
-					break;
-				case USHORT:
-					tmp.data.T_unsignedshort;
-					break;
-				case LLONG:
-					tmp.data.T_longlong;
-					break;
-				case LDOUBLE:
-					tmp.data.T_longdouble;
-					break;
-				default:
-					fprintf(stderr, "Aïe, Type inconnu\n");
-					return NULL;
-					break;
-			}
-
-			if( res != NULL )
-				add(res, tmp);
-			else
-				res = tmp;
-		}
-	}
+	return new;
 }
 
