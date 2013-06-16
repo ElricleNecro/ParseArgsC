@@ -1,31 +1,39 @@
 #ifndef PARSE_H
 #define PARSE_H
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 typedef enum {
-	NONE,
-	VOID,
-	DOUBLE,
-	FLOAT,
-	INT,
-	LONG,
-	CHAR,
-	SHORT,
-	BOOL,
+	T_NONE,
+	T_VOID,
+	T_DOUBLE,
+	T_FLOAT,
+	T_INT,
+	T_LONG,
+	T_CHAR,
+	T_SHORT,
+	T_BOOL,
 
-	UINT,
-	ULONG,
-	UCHAR,
-	USHORT,
+	T_UINT,
+	T_ULONG,
+	T_UCHAR,
+	T_USHORT,
 
-	LLONG,
-	LDOUBLE,
+	T_LLONG,
+	T_LDOUBLE,
 
-	IMPLEMENTED
+	T_FUNC,
+
+	T_IMPLEMENTED
 } Type;
 
+typedef void (*args_func)(void*);
+
 typedef union {
+	args_func        T_func;
 	bool           * T_bool;
 	void           * T_void;
 	double         * T_double;
@@ -43,20 +51,31 @@ typedef union {
 } Value;
 
 typedef struct {
-	char       * opt,  * lopt;
-	char       * help;
+	const char       * opt,  * lopt;
+	const char       * help;
 	Type         type;
 	Value        val;
 }Option;
 
-typedef struct _args{
-	char *opt;
+Option Option_Create(const char *opt, const char *lopt, Type type, void *def, const char *help);
+
+struct lst_args {
+	Option opt;
+	struct lst_args *next;
+};
+
+typedef struct _args {
+	//char *opt;
 	//char *
 	//void *val;
-	Value data;
-	struct _args *next;
-}Args;
+	//Value data;
+	//Option opt;
+	//struct _args *next;
+	struct lst_args *args;
+} Args;
 
-Option Option_Create(const char *opt, const char *lopt, Type type, void *def, const char *help);
+Args *Args_New(void);
+void Args_add(Args *this, const char *opt, const char *lopt, Type type, void *def, const char *help);
+void Args_Free(Args *this);
 
 #endif /* end of include guard: PARSE_H */

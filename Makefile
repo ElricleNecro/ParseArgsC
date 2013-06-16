@@ -4,6 +4,7 @@ SRCEXT   = c
 SRCDIR   = src
 OBJDIR   = build
 BINDIR   = build
+LIBDIR   = build
 
 PREFIX   = $$HOME/.local
 
@@ -15,7 +16,7 @@ OBJS    := $(patsubst %.$(SRCEXT),$(OBJDIR)/%.o,$(SRCS))
 
 DEBUG    = -g3
 INCLUDES = -I./include
-CFLAGS   = -Wall -Wshadow -Wcast-qual -Wcast-align -Wsign-compare -Wstrict-prototypes -Wredundant-decls -Wnested-externs -Wunreachable-code -Wwrite-strings -pedantic -ansi $(DEBUG) $(INCLUDES) -c
+CFLAGS   = -W -Wall -Wshadow -Wcast-qual -Wcast-align -Wsign-compare -Wstrict-prototypes -Wredundant-decls -Wnested-externs -Wunreachable-code -Wwrite-strings -pedantic $(DEBUG) $(INCLUDES) -c
 
 ifeq ($(SRCEXT), cpp)
 CC       = $(CXX)
