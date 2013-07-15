@@ -7,6 +7,14 @@
 #include <stdbool.h>
 
 typedef enum {
+	HELP,
+	TREAT_ERROR,
+	TREAT_SUCCESS,
+
+	ARGS_ERROR
+} Args_Error;
+
+typedef enum {
 	T_NONE,
 	T_VOID,
 	T_DOUBLE,
@@ -30,7 +38,7 @@ typedef enum {
 	T_IMPLEMENTED
 } Type;
 
-typedef void (*args_func)(void*);
+typedef void (*args_func)(struct lst_args*, int, const char **);
 
 typedef union {
 	args_func        T_func;
@@ -40,7 +48,7 @@ typedef union {
 	float          * T_float;
 	int            * T_int;
 	long           * T_long;
-	char           * T_char;
+	const char     * T_char;
 	short          * T_short;
 	unsigned int   * T_uint;
 	unsigned char  * T_uchar;
@@ -57,12 +65,15 @@ typedef struct {
 	Value        val;
 }Option;
 
-Option Option_Create(const char *opt, const char *lopt, Type type, void *def, const char *help);
-
 struct lst_args {
 	Option opt;
-	struct lst_args *next;
-};
+	struct lst_args *next, *end;
+}largs;
+
+typedef struct clst {
+	const char *opt;
+	struct clst *next, *end;
+} *CList;
 
 typedef struct _args {
 	//char *opt;
@@ -72,10 +83,14 @@ typedef struct _args {
 	//Option opt;
 	//struct _args *next;
 	struct lst_args *args;
+	struct clst *rest;
 } Args;
 
-Args *Args_New(void);
-void Args_add(Args *this, const char *opt, const char *lopt, Type type, void *def, const char *help);
-void Args_Free(Args *this);
+Option	   Option_Create(const char *opt, const char *lopt, Type type, void *def, const char *help);
+
+Args*	   Args_New(void);
+void	   Args_Add(Args *this, const char *opt, const char *lopt, Type type, void *def, const char *help);
+Args_Error Args_Parse(Args *this, const int argc, const char **argv);
+void	   Args_Free(Args *this);
 
 #endif /* end of include guard: PARSE_H */
