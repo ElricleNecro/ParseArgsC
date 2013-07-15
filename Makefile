@@ -16,7 +16,7 @@ OBJS    := $(patsubst %.$(SRCEXT),$(OBJDIR)/%.o,$(SRCS))
 
 DEBUG    = -g3
 INCLUDES = -I./include
-CFLAGS   = -W -Wall -Wshadow -Wcast-qual -Wcast-align -Wsign-compare -Wstrict-prototypes -Wredundant-decls -Wnested-externs -Wunreachable-code -Wwrite-strings -pedantic $(DEBUG) $(INCLUDES) -c
+CFLAGS   = -W -Wall -Wshadow -Wcast-qual -Wcast-align -Wsign-compare -Wstrict-prototypes -Wredundant-decls -Wnested-externs -Wunreachable-code -Wwrite-strings -pedantic -fstrict-aliasing $(DEBUG) $(INCLUDES) -c
 
 ifeq ($(SRCEXT), cpp)
 CC       = $(CXX)
@@ -37,6 +37,7 @@ test:
 
 install: $(LIBDIR)/lib$(LIB).so install-hdrs
 	install -m 755 $< $(PREFIX)/lib
+	sed -e "s:HOME:$(PREFIX):g" parser.pc > $(PREFIX)/lib/pkgconfig/parser.pc
 
 install-hdrs: $(HDRS)
 	install $< $(PREFIX)/include

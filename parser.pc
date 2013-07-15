@@ -1,0 +1,15 @@
+# Parser pkg-config source file
+
+prefix=HOME
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: Parser
+Description: Bibliothéque de gestion de la ligne de commande
+Version: 2.0.0
+Requires:
+Conflicts:
+Libs: -L${libdir}/ -lParser
+Libs.private: -lParser
+Cflags: -I${includedir}/
