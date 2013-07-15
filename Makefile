@@ -8,8 +8,8 @@ LIBDIR   = build
 
 PREFIX   = $$HOME/.local
 
-SRCS    := src/parse.c
-HDRS    := include/parse.h
+SRCS    := src/Parser.c
+HDRS    := include/Parser.h
 #$(shell find $(SRCDIR) -name '*.$(SRCEXT)')
 SRCDIRS := $(shell find . -name '*.$(SRCEXT)' -exec dirname {} \; | uniq)
 OBJS    := $(patsubst %.$(SRCEXT),$(OBJDIR)/%.o,$(SRCS))
