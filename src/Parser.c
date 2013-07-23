@@ -39,7 +39,7 @@ Option Option_Create(const char *opt, const char *lopt, Type type, void *def, co
 		case T_VOID:
 		case T_CHAR:
 		case T_UCHAR:
-			new.val.T_char    = (char*)def;
+			new.val.T_char    = (char**)def;
 			break;
 		case T_SHORT:
 			new.val.T_short   = (short*)def;
@@ -171,7 +171,7 @@ void Option_Convert(Option *new, const char *arg)
 		case T_VOID:
 		case T_CHAR:
 		case T_UCHAR:
-			new->val.T_char     = arg;
+			*new->val.T_char     = arg;
 			break;
 		case T_FLOAT:
 			*new->val.T_float   = (float)atof(arg);
