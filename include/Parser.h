@@ -59,10 +59,10 @@ typedef union {
 } Value;
 
 typedef struct {
-	const char       * opt,  * lopt;
-	const char       * help;
-	Type         type;
-	Value        val;
+	const char *opt, *lopt;
+	const char *help;
+	Type        type;
+	Value       val;
 }Option;
 
 struct lst_args {
