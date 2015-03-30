@@ -131,6 +131,8 @@ typedef enum {
 	T_IMPLEMENTED
 } Type;
 
+struct lst_args;
+
 typedef void (*args_func)(struct lst_args*, int, const char **);
 
 /**
