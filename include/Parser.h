@@ -163,7 +163,7 @@ typedef struct {
 	const char *help;	/*!Help string.*/
 	Type        type;	/*!Value Type.*/
 	Value       val;	/*!The value itself.*/
-}Option;
+} Option;
 
 /**
  * The List itself with the option and a pointer to the next element.
@@ -172,7 +172,7 @@ struct lst_args {
 	Option opt;		/*!Option description.*/
 	struct lst_args *next,	/*!Pointer to the next element.*/
 			*end;	/*!Pointer to the end of the list (used only during construction of the option list).*/
-}largs;
+} largs;
 
 /**
  * List containing all non parsed element.
