@@ -283,6 +283,17 @@ Args_Error Args_Parse(Args *this, const int argc, const char **argv)
 				Add_Rest(this, argv[i]);
 				break;
 			}
+			else if( !strcmp(argv[i], "--") )
+			{
+				i++;
+				while( i < argc )
+				{
+					Add_Rest(this, argv[i]);
+					i++;
+				}
+
+				return TREAT_SUCCESS;
+			}
 			else if( next->next == NULL )
 			{
 				fprintf(stderr, "Unrecognised parameter : '%s'\n", argv[i]);
