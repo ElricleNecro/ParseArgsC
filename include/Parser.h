@@ -146,7 +146,7 @@ typedef union {
 	float          * T_float;
 	int            * T_int;
 	long           * T_long;
-	char          ** T_char;
+	const char    ** T_char;
 	short          * T_short;
 	unsigned int   * T_uint;
 	unsigned char  * T_uchar;
