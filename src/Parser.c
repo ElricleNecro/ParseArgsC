@@ -1,7 +1,6 @@
 #include "Parser.h"
 
-Option Option_Create(const char *opt, const char *lopt, Type type, void *def, const char *help)
-{
+Option Option_Create(const char *opt, const char *lopt, Type type, void *def, const char *help) {
 	// Création de la structure d'option :
 	Option new = {.opt = opt, .lopt = lopt, .help = help};
 
@@ -16,8 +15,7 @@ Option Option_Create(const char *opt, const char *lopt, Type type, void *def, co
 	//new.help = help;
 
 	// On récupère le type de la variable :
-	switch(type)
-	{
+	switch(type) {
 		case T_FUNC:
 			new.val.T_func    = (args_func)def;
 		case T_BOOL:
@@ -70,8 +68,7 @@ Option Option_Create(const char *opt, const char *lopt, Type type, void *def, co
 	return new;
 }
 
-void parse_help(struct lst_args *lst, int i, const char **argv)
-{
+void parse_help(struct lst_args *lst, int i, const char **argv) {
 	if( i == 0 )
 		printf("%s:\n", argv[0]);
 
@@ -96,8 +93,7 @@ void parse_help(struct lst_args *lst, int i, const char **argv)
 		parse_help(lst->next, i+1, argv);
 }
 
-Args* Args_New(void)
-{
+Args* Args_New(void) {
 	// Création et allocation de la structure qui contiendras les arguments :
 	Args *new = NULL;
 	new = malloc(sizeof(Args));
@@ -115,13 +111,11 @@ Args* Args_New(void)
 	return new;
 }
 
-void Args_Add(Args *this, const char *opt, const char *lopt, Type type, void *def, const char *help)
-{
+void Args_Add(Args *this, const char *opt, const char *lopt, Type type, void *def, const char *help) {
 	// Nouveau chaînon pour les options :
 	struct lst_args * new = NULL;
 	new = malloc(sizeof(struct lst_args));
-	if( new == NULL )
-	{
+	if( new == NULL ) {
 		perror("Allocation error:");
 		// Choix discutable :
 		exit(EXIT_FAILURE);
@@ -133,15 +127,14 @@ void Args_Add(Args *this, const char *opt, const char *lopt, Type type, void *de
 
 	// Ajout de l'option à la fin de la liste :
 	struct lst_args * tmp = this->args;
-	while(tmp->next != NULL){
+	while(tmp->next != NULL) {
 		tmp = tmp->next;
 	}
 
 	tmp->next = new;
 }
 
-void Args_Free(Args *this)
-{
+void Args_Free(Args *this) {
 	// Libération des options non traité :
 	struct clst *cold= NULL, *cact = this->rest;
 	while( cact != NULL ) {
@@ -152,21 +145,18 @@ void Args_Free(Args *this)
 
 	// Libération des arguments :
 	struct lst_args *old= NULL, *act = this->args;
-	do
-	{
+	do {
 		old = act;
 		act = act->next;
 		free(old);
-	}while(act != NULL);
+	} while(act != NULL);
 
 	// Libération de la structure général :
 	free(this);
 }
 
-void Option_Convert(Option *new, const char *arg)
-{
-	switch(new->type)
-	{
+void Option_Convert(Option *new, const char *arg) {
+	switch(new->type) {
 		case T_NONE:
 		case T_VOID:
 		case T_CHAR:
@@ -230,43 +220,32 @@ void Add_Rest(Args *this, const char *argv)
 	tmp->next = new;
 }
 
-Args_Error Args_Parse(Args *this, const int argc, const char **argv)
-{
-	struct lst_args *next = NULL;
-
+Args_Error Args_Parse(Args *this, const int argc, const char **argv) {
 	for (int i = 1; i < argc; i++) {
 #ifdef __DEBUG_PARSER
 		fprintf(stderr, "Parsing '%s':", argv[i]);
 #endif
-		next = this->args;
-		do
-		{
+		for(struct lst_args *next = this->args; next != NULL; next = next->next) {
 #ifdef __DEBUG_PARSER
 			fprintf(stderr, "\tTesting ('%s', '%s'): ", (next->opt.opt==NULL)?"":next->opt.opt, (next->opt.lopt==NULL)?"":next->opt.lopt );
 #endif
-			if( !strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") )
-			{
+			if( !strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") ) {
 				void (*f)(struct lst_args *, int, const char**) = (void (*)(struct lst_args *, int, const char**))next->opt.val.T_void;
 				f(this->args, 0, &argv[0]);
 				return HELP;
 			}
-			else if( (next->opt.opt != NULL && !strcmp(argv[i], next->opt.opt)) || (next->opt.lopt != NULL && !strcmp(argv[i], next->opt.lopt)) )
-			{
+			else if( (next->opt.opt != NULL && !strcmp(argv[i], next->opt.opt)) || (next->opt.lopt != NULL && !strcmp(argv[i], next->opt.lopt)) ) {
 				// On converti l'option et/ou son argument en "valeur" :
-				if( next->opt.type == T_BOOL )
-				{
+				if( next->opt.type == T_BOOL ) {
 					*next->opt.val.T_bool = true;
 					break;
 				}
-				else if( next->opt.type == T_FUNC )
-				{
+				else if( next->opt.type == T_FUNC ) {
 					args_func f = next->opt.val.T_func;
 					f(this->args, argc - i, &argv[i]);
 					fprintf(stderr, "Function handling not yet entirely implemented!\n");
 					break;
-				}
-				else
-				{
+				} else {
 #ifdef __DEBUG_PARSER
 					printf("Found option %d not BOOL or FUNC, parsing.", i);
 #endif
@@ -277,36 +256,27 @@ Args_Error Args_Parse(Args *this, const int argc, const char **argv)
 #endif
 					break;
 				}
-			}
-			else if( argv[i][0] != '-' )
-			{
+			} else if( argv[i][0] != '-' ) {
 				Add_Rest(this, argv[i]);
 				break;
-			}
-			else if( !strcmp(argv[i], "--") )
-			{
+			} else if( !strcmp(argv[i], "--") ) {
 				i++;
-				while( i < argc )
-				{
+				while( i < argc ) {
 					Add_Rest(this, argv[i]);
 					i++;
 				}
 
 				return TREAT_SUCCESS;
-			}
-			else if( next->next == NULL )
-			{
+			} else if( next->next == NULL ) {
 				fprintf(stderr, "Unrecognised parameter : '%s'\n", argv[i]);
 				parse_help(this->args, 0, &argv[0]);
 				return TREAT_ERROR;
 			}
-			next = next->next;
 #ifdef __DEBUG_PARSER
 			fprintf(stderr, "\n");
 #endif
-		}while(next != NULL);
+		}
 	}
 
 	return TREAT_SUCCESS;
 }
-
