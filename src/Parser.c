@@ -198,10 +198,8 @@ void Option_Convert(Option *new, const char *arg) {
 	}
 }
 
-void Add_Rest(Args *this, const char *argv)
-{
-	if( this->rest == NULL )
-	{
+void Add_Rest(Args *this, const char *argv) {
+	if( this->rest == NULL ) {
 		this->rest       = malloc(sizeof(struct clst));
 		this->rest->next = NULL;
 		this->rest->opt  = argv;
@@ -213,8 +211,7 @@ void Add_Rest(Args *this, const char *argv)
 	new->opt = argv;
 	new->next = NULL;
 
-	while( tmp->next != NULL )
-	{
+	while( tmp->next != NULL ) {
 		tmp = tmp->next;
 	}
 	tmp->next = new;
@@ -233,14 +230,12 @@ Args_Error Args_Parse(Args *this, const int argc, const char **argv) {
 				void (*f)(struct lst_args *, int, const char**) = (void (*)(struct lst_args *, int, const char**))next->opt.val.T_void;
 				f(this->args, 0, &argv[0]);
 				return HELP;
-			}
-			else if( (next->opt.opt != NULL && !strcmp(argv[i], next->opt.opt)) || (next->opt.lopt != NULL && !strcmp(argv[i], next->opt.lopt)) ) {
+			} else if( (next->opt.opt != NULL && !strcmp(argv[i], next->opt.opt)) || (next->opt.lopt != NULL && !strcmp(argv[i], next->opt.lopt)) ) {
 				// On converti l'option et/ou son argument en "valeur" :
 				if( next->opt.type == T_BOOL ) {
 					*next->opt.val.T_bool = true;
 					break;
-				}
-				else if( next->opt.type == T_FUNC ) {
+				} else if( next->opt.type == T_FUNC ) {
 					args_func f = next->opt.val.T_func;
 					f(this->args, argc - i, &argv[i]);
 					fprintf(stderr, "Function handling not yet entirely implemented!\n");
