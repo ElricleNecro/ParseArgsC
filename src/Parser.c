@@ -18,6 +18,7 @@ Option Option_Create(const char *opt, const char *lopt, Type type, void *def, co
 	switch(type) {
 		case T_FUNC:
 			new.val.T_func    = (args_func)def;
+			break;
 		case T_BOOL:
 			new.val.T_bool    = (bool*)def;
 			break;
