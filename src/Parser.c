@@ -106,6 +106,7 @@ Args* Args_New(void) {
 	new->args->opt  = Option_Create("-h", "--help", T_FUNC, (void*)parse_help, "Print this help.");
 	//strcmp("-h", "--help");
 
+	new->end = new->args;
 	new->rest = NULL;
 
 	return new;
@@ -125,13 +126,8 @@ void Args_Add(Args *this, const char *opt, const char *lopt, Type type, void *de
 	new->opt   = Option_Create(opt, lopt, type, def, help);
 	new->next  = NULL;
 
-	// Ajout de l'option à la fin de la liste :
-	struct lst_args * tmp = this->args;
-	while(tmp->next != NULL) {
-		tmp = tmp->next;
-	}
-
-	tmp->next = new;
+	this->end->next = new;
+	this->end = new;
 }
 
 void Args_Free(Args *this) {

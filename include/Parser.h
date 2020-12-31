@@ -195,8 +195,8 @@ typedef struct _args {
 	//Value data;
 	//Option opt;
 	//struct _args *next;
-	struct lst_args *args;	/*!The Option list.*/
-	struct clst *rest;	/*!The non parsed element list.*/
+	struct lst_args *args, *end;	/*!The Option list.*/
+	struct clst *rest, *rend;	/*!The non parsed element list.*/
 } Args;
 
 /**
