@@ -19,6 +19,9 @@ Option Option_Create(const char *opt, const char *lopt, Type type, void *def, co
 		case T_FUNC:
 			new.val.T_func    = (args_func)def;
 			break;
+		case T_LIST:
+			new.val.T_list    = (CList*)def;
+			break;
 		case T_BOOL:
 			new.val.T_bool    = (bool*)def;
 			break;
@@ -236,6 +239,27 @@ Args_Error Args_Parse(Args *this, const int argc, const char **argv) {
 					args_func f = next->opt.val.T_func;
 					f(this->args, argc - i, &argv[i]);
 					fprintf(stderr, "Function handling not yet entirely implemented!\n");
+					break;
+				} else if( next->opt.type == T_LIST ) {
+					if( next->opt.val.T_list == NULL ) {
+						*next->opt.val.T_list = malloc(sizeof(struct clst));
+						(*next->opt.val.T_list)->opt = argv[i + 1];
+						(*next->opt.val.T_list)->next = NULL;
+						(*next->opt.val.T_list)->end = *next->opt.val.T_list;
+
+						i += 1;
+						break;
+					}
+					CList start = *next->opt.val.T_list, end = (*next->opt.val.T_list)->end;
+					end->next = malloc(sizeof(struct clst));
+					end       = end->next;
+					end->opt  = argv[i+1];
+					end->next = NULL;
+
+					for(CList tmp = start; tmp != NULL; tmp = tmp->next)
+						tmp->end = end;
+
+					i += 1;
 					break;
 				} else {
 #ifdef __DEBUG_PARSER

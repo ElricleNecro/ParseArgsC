@@ -128,12 +128,23 @@ typedef enum {
 
 	T_FUNC,
 
+	T_LIST,
+
 	T_IMPLEMENTED
 } Type;
 
 struct lst_args;
 
 typedef void (*args_func)(struct lst_args*, int, const char **);
+
+/**
+ * List containing all non parsed element.
+ */
+typedef struct clst {
+	const char *opt;	/*!The string of the non parsed element.*/
+	struct clst *next,	/*!Pointer to the next element.*/
+		    *end;	/*!Pointer to the last element of the list (used only during construction).*/
+} *CList;
 
 /**
  * This union contains the value gives as default.
@@ -154,6 +165,7 @@ typedef union {
 	unsigned long  * T_ulong;
 	long double    * T_ldouble;
 	long long      * T_llong;
+	CList          * T_list;
 } Value;
 
 /**
@@ -175,15 +187,6 @@ struct lst_args {
 	struct lst_args *next,	/*!Pointer to the next element.*/
 			*end;	/*!Pointer to the end of the list (used only during construction of the option list).*/
 } largs;
-
-/**
- * List containing all non parsed element.
- */
-typedef struct clst {
-	const char *opt;	/*!The string of the non parsed element.*/
-	struct clst *next,	/*!Pointer to the next element.*/
-		    *end;	/*!Pointer to the last element of the list (used only during construction).*/
-} *CList;
 
 /**
  * Container for the option list plus the non parsed element list.
