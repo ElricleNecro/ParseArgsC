@@ -241,7 +241,7 @@ Args_Error Args_Parse(Args *this, const int argc, const char **argv) {
 					fprintf(stderr, "Function handling not yet entirely implemented!\n");
 					break;
 				} else if( next->opt.type == T_LIST ) {
-					if( next->opt.val.T_list == NULL ) {
+					if( *next->opt.val.T_list == NULL ) {
 						*next->opt.val.T_list = malloc(sizeof(struct clst));
 						(*next->opt.val.T_list)->opt = argv[i + 1];
 						(*next->opt.val.T_list)->next = NULL;
