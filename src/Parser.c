@@ -242,7 +242,7 @@ Args_Error Args_Parse(Args *this, const int argc, const char **argv) {
 					break;
 				} else if( next->opt.type == T_LIST ) {
 					if( *next->opt.val.T_list == NULL ) {
-						*next->opt.val.T_list = malloc(sizeof(struct clst));
+						*next->opt.val.T_list = calloc(1, sizeof(struct clst));
 						(*next->opt.val.T_list)->opt = argv[i + 1];
 						(*next->opt.val.T_list)->next = NULL;
 						(*next->opt.val.T_list)->end = *next->opt.val.T_list;
@@ -251,7 +251,7 @@ Args_Error Args_Parse(Args *this, const int argc, const char **argv) {
 						break;
 					}
 					CList start = *next->opt.val.T_list, end = (*next->opt.val.T_list)->end;
-					end->next = malloc(sizeof(struct clst));
+					end->next = calloc(1, sizeof(struct clst));
 					end       = end->next;
 					end->opt  = argv[i+1];
 					end->next = NULL;
