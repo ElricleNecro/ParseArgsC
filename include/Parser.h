@@ -253,6 +253,13 @@ Args_Error Args_Parse(Args *this, const int argc, const char **argv);
  */
 void Args_Free(Args *this);
 
+/**
+ * This function will free the memory allocated for one T_LIST option.
+ *
+ * @param[in] opt List to be free'd.
+ */
+void clist_free(CList opt);
+
 #endif /* end of include guard: PARSE_H */
 
 //vim:spelllang=en

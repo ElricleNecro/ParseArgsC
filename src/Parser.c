@@ -155,6 +155,15 @@ void Args_Free(Args *this) {
 	free(this);
 }
 
+void clist_free(CList opt) {
+	for(CList tmp = opt; tmp != NULL; ) {
+		CList free_lst = tmp;
+		tmp = tmp->next;
+
+		free(free_lst);
+	}
+}
+
 void Option_Convert(Option *new, const char *arg) {
 	switch(new->type) {
 		case T_NONE:
